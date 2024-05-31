@@ -1,0 +1,26 @@
+volumes:
+  postgres_data: {}
+
+services:
+  harp:
+    image: makersquad/harp-proxy
+    volumes:
+      - ./harp.yaml:/etc/harp.yaml
+    ports:
+      - 7080:7080
+      - 7090:7090
+  httpbin:
+    image: mccutchen/go-httpbin
+    ports:
+      - 7091:8080
+  postgres:
+    image: postgres:16
+    ports:
+      - 7432:5432
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+
+

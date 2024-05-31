@@ -1,0 +1,7 @@
+dashboard:
+  port: 7080
+proxy:
+  endpoints:
+    - name: httpbin
+      port: 7090
+      url: http://httpbin:8080
