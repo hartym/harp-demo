@@ -6,6 +6,7 @@ import './App.css'
 function getApiUrl(path) {
     return `http://localhost:7090${path}`
 }
+
 function DataTable({data}) {
     if (!data) {
         return '(null)';
@@ -18,7 +19,7 @@ function DataTable({data}) {
             {data.map((value, index) => (
                 <tr key={index}>
                     <td>
-                      <DataTable data={value} />
+                        <DataTable data={value}/>
                     </td>
                 </tr>
             ))}
@@ -30,7 +31,7 @@ function DataTable({data}) {
                 <tr key={key}>
                     <th>{key}</th>
                     <td>
-                        <DataTable data={value} />
+                        <DataTable data={value}/>
                     </td>
                 </tr>
             ))}
@@ -43,22 +44,45 @@ DataTable.propTypes = {
 }
 
 function App() {
-    const [count, setCount] = useState(0)
+    const [url, setUrl] = useState("/get")
     const [data, setData] = useState(null)
+    const [noCache, setNoCache] = useState(false)
 
     function handleClick() {
-        fetch(getApiUrl('/get')).then(response => response.json()).then(data => {
+        setData("loading")
+        const headers = new Headers()
+        if (noCache) {
+            headers.append('Cache-Control', 'no-cache')
+        }
+        fetch(getApiUrl(url), {headers}).then(response => response.json()).then(data => {
             setData(data);
         })
-        setCount(count + 1)
     }
 
     return (
-        <>
-            <button onClick={handleClick}>GET /get</button>
-            {count > 0 && <p>You clicked {count} times</p>}
-            {data && <DataTable data={data} />}
-        </>
+        <div style={{width: "100vw", height: "100vh", display: "flex"}}>
+            <div style={{width: "400px", overflowY: "auto", borderRight: "2px solid #085E9F"}}>
+                <h1>Harp Demo Sandbox</h1>
+                <div>
+                    <select value={url} style={{margin: "0.3em"}} onChange={e => setUrl(e.target.value)}>
+                        <option value="/get">default (/get)</option>
+                        <option value="/delay/1">1 second delay (/delay/1)</option>
+                    </select>
+                    <button onClick={handleClick}>Send</button>
+                    <br/>
+                    <label>
+                        <input type="checkbox" onChange={(e) => setNoCache(e.target.checked)} checked={noCache}/> Bypass
+                        cache
+                    </label>
+                </div>
+                <div style={{margin: '0.5em'}}>
+                    {data ? data === "loading" ? 'loading...' : <>
+                        <h2>Response</h2>
+                        <DataTable data={data}/></> : null}
+                </div>
+            </div>
+            <iframe style={{flexGrow: 1, border: 0}} src="http://localhost:7080/"></iframe>
+        </div>
     )
 }
 
