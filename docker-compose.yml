@@ -24,3 +24,53 @@ services:
       POSTGRES_PASSWORD: demo
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  # https://github.com/locustio/locust/issues/150 (multiple hosts)
+  locust-master:
+    image: locustio/locust
+    ports:
+      - "7099:8089"
+    volumes:
+      - ./locust:/mnt/locust
+    command: -f /mnt/locust/locustfile.py --master -H http://host.docker.internal:7090
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  worker:
+    image: locustio/locust
+    volumes:
+      - ./locust:/mnt/locust
+    command: -f /mnt/locust/locustfile.py --worker --master-host locust-master
+    deploy:
+      mode: replicated
+      replicas: 5
+      endpoint_mode: vip
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    ports:
+      - 9090:9090
+    restart: unless-stopped
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prom_data:/prometheus
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_USER=demo
+      - GF_SECURITY_ADMIN_PASSWORD=demo
+      - GF_USERS_DEFAULT_THEME=light
+    volumes:
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana/dashboards:/var/lib/grafana/dashboards

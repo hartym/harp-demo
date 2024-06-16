@@ -5,10 +5,12 @@ proxy:
   endpoints:
     - name: httpbin
       port: 7090
-      url: http://httpbin:8080
+      url: http://localhost:7091
 
 storage:
   type: sqlalchemy
   url: postgresql+asyncpg://demo:demo@postgres/demo
-  drop_tables: false
-  echo: false
+  migrate: true
+
+http_client:
+  timeout: 5.0
