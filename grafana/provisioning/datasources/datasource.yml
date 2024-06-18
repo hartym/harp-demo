@@ -6,4 +6,21 @@ datasources:
   url: http://prometheus:9090 
   isDefault: true
   access: proxy
-  editable: true
+  editable: false
+
+- name: Postgres
+  type: postgres
+  url: postgres:5432
+  user: demo
+  secureJsonData:
+    password: 'demo'
+  jsonData:
+    database: demo
+    sslmode: 'disable'
+    maxOpenConns: 10
+    maxIdleConns: 10
+    maxIdleConnsAuto: true
+    connMaxLifetime: 14400
+    postgresVersion: 1500
+    timescaledb: false
+  

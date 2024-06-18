@@ -1,5 +1,6 @@
 volumes:
   postgres_data: {}
+  prom_data: {}
 
 services:
   harp:
@@ -10,10 +11,15 @@ services:
       - 7080:7080
       - 7090:7090
 
-  httpbin:
+  api1:
     image: mccutchen/go-httpbin
     ports:
       - 7091:8080
+
+  api2:
+    image: mccutchen/go-httpbin
+    ports:
+      - 7093:8080
 
   postgres:
     image: postgres:16

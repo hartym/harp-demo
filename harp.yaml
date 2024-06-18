@@ -3,9 +3,12 @@ dashboard:
 
 proxy:
   endpoints:
-    - name: httpbin
+    - name: first
       port: 7090
       url: http://localhost:7091
+    - name: second
+      port: 7092
+      url: http://localhost:7093
 
 storage:
   type: sqlalchemy
