@@ -75,25 +75,10 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "s"
         },
         "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Time"
-            },
-            "properties": [
-              {
-                "id": "custom.axisPlacement",
-                "value": "right"
-              },
-              {
-                "id": "unit",
-                "value": "s"
-              }
-            ]
-          },
           {
             "matcher": {
               "id": "byFrameRefID",
@@ -170,7 +155,7 @@
           "expr": "rate(requests_time_sum{path=\"\"}[$__rate_interval]) / rate(requests_time_count{path=\"\"}[$__rate_interval])",
           "hide": false,
           "instant": false,
-          "legendFormat": "Time",
+          "legendFormat": "Time ({{method}})",
           "range": true,
           "refId": "Time"
         }
@@ -423,7 +408,7 @@
           "editorMode": "code",
           "expr": "storage_transactions\n",
           "instant": false,
-          "legendFormat": "__auto",
+          "legendFormat": "{{__name__}}",
           "range": true,
           "refId": "Transactions"
         },
@@ -436,7 +421,7 @@
           "expr": "storage_messages\n",
           "hide": false,
           "instant": false,
-          "legendFormat": "__auto",
+          "legendFormat": "{{__name__}}",
           "range": true,
           "refId": "A"
         },
@@ -449,7 +434,7 @@
           "expr": "storage_blobs\n",
           "hide": false,
           "instant": false,
-          "legendFormat": "__auto",
+          "legendFormat": "{{__name__}}",
           "range": true,
           "refId": "B"
         },
@@ -462,7 +447,7 @@
           "expr": "storage_blobs_orphans\n",
           "hide": false,
           "instant": false,
-          "legendFormat": "__auto",
+          "legendFormat": "{{__name__}}",
           "range": true,
           "refId": "C"
         }
@@ -696,7 +681,9 @@
       "id": 5,
       "options": {
         "legend": {
-          "calcs": ["mean"],
+          "calcs": [
+            "mean"
+          ],
           "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
@@ -824,7 +811,9 @@
       "id": 6,
       "options": {
         "legend": {
-          "calcs": ["mean"],
+          "calcs": [
+            "mean"
+          ],
           "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
