@@ -421,7 +421,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "harp_storage_transactions\n",
+          "expr": "storage_transactions\n",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -433,7 +433,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "harp_storage_messages\n",
+          "expr": "storage_messages\n",
           "hide": false,
           "instant": false,
           "legendFormat": "__auto",
@@ -446,7 +446,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "harp_storage_blobs\n",
+          "expr": "storage_blobs\n",
           "hide": false,
           "instant": false,
           "legendFormat": "__auto",
@@ -459,7 +459,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "harp_storage_blobs_orphans\n",
+          "expr": "storage_blobs_orphans\n",
           "hide": false,
           "instant": false,
           "legendFormat": "__auto",

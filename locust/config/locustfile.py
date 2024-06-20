@@ -1,8 +1,11 @@
 from locust import HttpUser, task, between
 import random
 
+AVERAGE_WAIT_TIME = 5.0
+
+
 class BinUser(HttpUser):
-    wait_time = between(5*0.5, 5*1.5)
+    wait_time = between(AVERAGE_WAIT_TIME*0.5, AVERAGE_WAIT_TIME*1.5)
 
     @task
     def cached(self):
@@ -16,3 +19,8 @@ class BinUser(HttpUser):
     def image(self):
         self.client.get("/image" + random.choice(["", "/jpeg", "/png", "/svg", "/webp"]))
 
+
+
+if __name__ == "__main__":
+    from locust import run_single_user
+    run_single_user(BinUser)

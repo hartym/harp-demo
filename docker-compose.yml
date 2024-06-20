@@ -3,13 +3,13 @@ volumes:
   prom_data: {}
 
 services:
-  harp:
-    image: makersquad/harp-proxy:git-dev
-    volumes:
-      - ./harp.yaml:/etc/harp.yaml
-    ports:
-      - 7080:7080
-      - 7090:7090
+  #  harp:
+  #    image: makersquad/harp-proxy:0.5.0rc2
+  #    volumes:
+  #      - ./harp.yaml:/etc/harp.yaml
+  #    ports:
+  #      - 7080:7080
+  #      - 7090:7090
 
   api1:
     image: mccutchen/go-httpbin
@@ -35,9 +35,9 @@ services:
   locust-master:
     image: locustio/locust
     ports:
-      - "7099:8089"
+      - 7099:8089
     volumes:
-      - ./locust:/mnt/locust
+      - ./locust/config:/mnt/locust
     command: -f /mnt/locust/locustfile.py --master -H http://host.docker.internal:7090
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -45,7 +45,7 @@ services:
   worker:
     image: locustio/locust
     volumes:
-      - ./locust:/mnt/locust
+      - ./locust/config:/mnt/locust
     command: -f /mnt/locust/locustfile.py --worker --master-host locust-master
     deploy:
       mode: replicated

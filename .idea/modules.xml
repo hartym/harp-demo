@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/badapi/badapi.iml" filepath="$PROJECT_DIR$/badapi/badapi.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/harp-demo.iml" filepath="$PROJECT_DIR$/.idea/harp-demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/locust/locust.iml" filepath="$PROJECT_DIR$/locust/locust.iml" />
     </modules>
   </component>
 </project>

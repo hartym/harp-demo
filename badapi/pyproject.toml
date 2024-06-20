@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "badapi"
+version = "0.1.0"
+description = ""
+authors = ["Romain Dorgueil <romain@makersquad.fr>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.111.0"
+faker = "^25.8.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -3,7 +3,7 @@
 start: pull
 	@echo "Starting the application..."
 	docker-compose up -d
-	(cd frontend && pnpm dev)
+	#(cd frontend && pnpm dev)
 
 stop:
 	docker-compose down

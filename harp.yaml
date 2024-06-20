@@ -3,12 +3,12 @@ dashboard:
 
 proxy:
   endpoints:
-    - name: first
+    - name: httpbin-1
       port: 7090
-      url: http://localhost:7091
-    - name: second
+      url: http://127.0.0.1:7091
+    - name: httpbin-2
       port: 7092
-      url: http://localhost:7093
+      url: http://127.0.0.1:7093
 
 storage:
   type: sqlalchemy
@@ -16,4 +16,4 @@ storage:
   migrate: true
 
 http_client:
-  timeout: 5.0
+  timeout: 10.0

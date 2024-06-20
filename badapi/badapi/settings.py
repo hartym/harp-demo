@@ -1,0 +1,5 @@
+
+
+
+DELAY_MIN = 0.01
+DELAY_MAX = 6.0

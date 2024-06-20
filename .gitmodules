@@ -1,0 +1,3 @@
+[submodule "cache-tests"]
+	path = cache-tests
+	url = git@github.com:http-tests/cache-tests.git
