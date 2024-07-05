@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: index
+  labels:
+    app: index
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: index
+  template:
+    metadata:
+      labels:
+        app: index
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:stable-alpine
+        ports:
+        - name: http
+          containerPort: 80
+        volumeMounts:
+        - name: index-volume
+          mountPath: /usr/share/nginx/html
+      volumes:
+      - name: index-volume
+        configMap:
+          name: index
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: index
+spec:
+  selector:
+    app: index
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: http
+---
+  apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    name: index
+  spec:
+    ingressClassName: nginx
+    rules:
+      - host: harp.demo
+        http:
+          paths:
+            - pathType: Prefix
+              backend:
+                service:
+                  name: index
+                  port:
+                    number: 80
+              path: /
+    tls:
+      - hosts:
+          - harp.demo
+        secretName: demo-tls

@@ -1,6 +1,7 @@
 volumes:
   postgres_data: {}
   prom_data: {}
+  redis_data: {}
 
 services:
   #  harp:
@@ -31,8 +32,15 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  redis:
+    image: redis:latest
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+
   # https://github.com/locustio/locust/issues/150 (multiple hosts)
-  locust-master:
+  locust:
     image: locustio/locust
     ports:
       - 7099:8089
@@ -42,17 +50,23 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
-  worker:
+  locust-worker:
     image: locustio/locust
     volumes:
       - ./locust/config:/mnt/locust
-    command: -f /mnt/locust/locustfile.py --worker --master-host locust-master
+    command: -f /mnt/locust/locustfile.py --worker --master-host locust
     deploy:
       mode: replicated
       replicas: 5
       endpoint_mode: vip
     extra_hosts:
       - "host.docker.internal:host-gateway"
+
+  locust-exporter:
+    image: containersol/locust_exporter
+    command: --locust.uri=http://locust:8089
+    ports:
+      - 7098:9646
 
   prometheus:
     image: prom/prometheus
@@ -70,7 +84,7 @@ services:
     image: grafana/grafana
     container_name: grafana
     ports:
-      - 3000:3000
+      - 7070:3000
     restart: unless-stopped
     environment:
       - GF_SECURITY_ADMIN_USER=demo

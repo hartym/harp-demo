@@ -1,16 +1,59 @@
 #!/bin/bash
 
+ulimit -n 10240
 docker-compose up -d
 
-#export LOGGING_HYPERCORN_ACCESS=INFO
-export LOGGING_HARP_PROXY=DEBUG
+export OPTIONS=
+export PARSED_OPTIONS=""
+export SERVICES=""
 export USE_ASGI_PROMETHEUS_MIDDLEWARE=True
+
+# unshift known arguments from commandline to apply some optionbs
+for arg in "$@"; do
+  if [[ $arg == "devserver" ]]; then
+    SERVICES=dashboard
+    OPTIONS="--set dashboard.devserver.port=11111"
+    shift
+    continue
+  fi
+
+  if [[ $arg == "redis" ]]; then
+    PARSED_OPTIONS="$PARSED_OPTIONS --file ../harp-demo/harp-redis.yml"
+    shift
+    continue
+  fi
+
+  if [[ $arg == "log:access" ]]; then
+    export LOGGING_HYPERCORN_ACCESS=INFO
+    shift
+    continue
+  fi
+
+  if [[ $arg == "log:proxy" ]]; then
+    export LOGGING_HARP_PROXY=INFO
+    shift
+    continue
+  fi
+
+  if [[ $arg == "log:sql" ]]; then
+    export LOGGING_SQLALCHEMY=INFO
+    shift
+    continue
+  fi
+
+  PARSED_OPTIONS="$PARSED_OPTIONS $arg"
+done
+
+#curl -H "Authorization: Bearer <apikey>" http://grafana:3000/api/annotations -H "Content-Type: application/json" -d '{"text":"version 1.2.3 deployed","tags":["deploy","production"]}'
 
 (
 	cd ../harp;
-	poetry run harp start dashboard server \
+	rm -rf .cache/hishel/
+	poetry run harp start $SERVICES $* \
 		-f ../harp-demo/harp.yaml \
+		$PARSED_OPTIONS \
 		--set storage.url=postgresql+asyncpg://demo:demo@localhost:7432/demo \
-		--set dashboard.devserver_port=11111 \
+		$OPTIONS \
+		--disable telemetry \
 		--server-subprocess 'cache-test:7094:../harp-demo/cache-tests:npm_config_port=$port npm run server'
 ) 

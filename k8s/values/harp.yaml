@@ -1,0 +1,37 @@
+fullnameOverride: harp
+
+postgresql:
+  auth:
+    database: harp
+    password: password
+    username: harp
+  enabled: true
+
+endpoints:
+  - name: api1
+    port: 8080
+    serviceName: api1-proxy
+    url: http://api1-internal/
+  - name: api2
+    port: 8081
+    serviceName: api2-proxy
+    url: http://api2-internal/
+
+settings:
+  storage:
+    type: sqlalchemy
+    url: postgresql+asyncpg://harp:password@harp-postgresql/harp
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  hosts:
+    - host: dashboard.harp.demo
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - hosts:
+        - dashboard.harp.demo
+      secretName: demo-tls

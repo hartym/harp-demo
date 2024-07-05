@@ -1,0 +1,33 @@
+server:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+    - prometheus.harp.demo
+    tls:
+    - hosts:
+        - prometheus.harp.demo
+      secretName: demo-tls
+
+extraScrapeConfigs: |
+  - job_name: harp
+    honor_timestamps: true
+    scrape_interval: 10s
+    scrape_timeout: 10s
+    metrics_path: /.prometheus/metrics
+    scheme: http
+    static_configs:
+      - targets:
+          - harp-dashboard:4080
+
+alertmanager:
+  enabled: false
+
+kube-state-metrics:
+  enabled: false
+
+prometheus-node-exporter:
+  enabled: false
+
+prometheus-pushgateway:
+  enabled: false

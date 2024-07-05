@@ -139,10 +139,10 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "rate(requests_time_count{path=\"\"}[$__rate_interval])",
+          "expr": "sum(rate(requests_time_count{path=\"\"}[$__rate_interval]))",
           "hide": false,
           "instant": false,
-          "legendFormat": "Count ({{method}})",
+          "legendFormat": "Count",
           "range": true,
           "refId": "Count"
         },
@@ -152,10 +152,10 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "rate(requests_time_sum{path=\"\"}[$__rate_interval]) / rate(requests_time_count{path=\"\"}[$__rate_interval])",
+          "expr": "sum(rate(requests_time_sum{path=\"\"}[$__rate_interval])) / sum(rate(requests_time_count{path=\"\"}[$__rate_interval]))",
           "hide": false,
           "instant": false,
-          "legendFormat": "Time ({{method}})",
+          "legendFormat": "Time",
           "range": true,
           "refId": "Time"
         }
@@ -280,6 +280,42 @@
                 }
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "Error Rate"
+            },
+            "properties": [
+              {
+                "id": "custom.axisPlacement",
+                "value": "right"
+              },
+              {
+                "id": "unit",
+                "value": "percentunit"
+              },
+              {
+                "id": "custom.drawStyle",
+                "value": "line"
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed",
+                  "seriesBy": "max"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              }
+            ]
           }
         ]
       },
@@ -315,9 +351,381 @@
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "sum (rate(responses_count_total{status=~\"5..\"}[$__rate_interval])) / sum (rate(responses_count_total[$__rate_interval]))",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "%error",
+          "range": true,
+          "refId": "Error Rate"
         }
       ],
       "title": "Responses Count by Status (200, ...)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 100,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 0,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "ASGI Kernel"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "light-red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Proxy Controller"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "light-yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Forward"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "super-light-blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "id": 5,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "maxHeight": 600,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "sum(rate(kernel_sum[$__rate_interval])) / sum(rate(kernel_count[$__rate_interval]))\n",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "ASGI Kernel",
+          "range": true,
+          "refId": "KERNEL"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "sum(rate(proxy_sum[$__rate_interval])) / sum(rate(proxy_count[$__rate_interval]))\n",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "Proxy Controller",
+          "range": true,
+          "refId": "PROXY"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "sum(rate(http_sum[$__rate_interval])) / sum(rate(http_count[$__rate_interval]))\n",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "Forward",
+          "range": true,
+          "refId": "HTTP"
+        }
+      ],
+      "title": "Kernel > Proxy > Http – Transaction Time",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": true,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "always",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "Cost (%)"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              },
+              {
+                "id": "custom.drawStyle",
+                "value": "bars"
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 100
+              },
+              {
+                "id": "custom.axisSoftMax",
+                "value": 1
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "never"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Kernel+Proxy Cost (s)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "super-light-red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Proxy Cost (s)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
+      "id": 6,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "maxHeight": 600,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "sum(rate(proxy_sum[$__rate_interval])) / sum(rate(proxy_count[$__rate_interval]))\n- sum(rate(http_sum[$__rate_interval])) / sum(rate(http_count[$__rate_interval]))\n",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "Proxy Cost (s)",
+          "range": true,
+          "refId": "Cost (proxy time)"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "sum(rate(kernel_sum[$__rate_interval])) / sum(rate(kernel_count[$__rate_interval]))\n- sum(rate(http_sum[$__rate_interval])) / sum(rate(http_count[$__rate_interval]))\n",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "Kernel+Proxy Cost (s)",
+          "range": true,
+          "refId": "Cost (kernel time)"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "(sum(rate(kernel_sum[$__rate_interval])) / sum(rate(kernel_count[$__rate_interval]))\n- sum(rate(http_sum[$__rate_interval])) / sum(rate(http_count[$__rate_interval])))\n/sum(rate(kernel_sum[$__rate_interval])) / sum(rate(kernel_count[$__rate_interval]))\n\n",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "Proxy Cost (% of total time)",
+          "range": true,
+          "refId": "Cost (%)"
+        }
+      ],
+      "title": "Kernel & Proxy – Cost",
       "type": "timeseries"
     },
     {
@@ -383,7 +791,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 8
+        "y": 16
       },
       "id": 4,
       "options": {
@@ -518,7 +926,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 8
+        "y": 16
       },
       "id": 3,
       "options": {
@@ -620,7 +1028,7 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "mode": "thresholds"
           },
           "custom": {
             "axisBorderShow": false,
@@ -630,16 +1038,16 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
+            "fillOpacity": 50,
+            "gradientMode": "scheme",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
             "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
             "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
@@ -651,24 +1059,37 @@
               "mode": "none"
             },
             "thresholdsStyle": {
-              "mode": "off"
+              "mode": "dashed"
             }
           },
           "mappings": [],
+          "max": 100,
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
+                "color": "#727272",
                 "value": null
               },
               {
                 "color": "red",
-                "value": 80
+                "value": 50
+              },
+              {
+                "color": "yellow",
+                "value": 70
+              },
+              {
+                "color": "green",
+                "value": 85
+              },
+              {
+                "color": "blue",
+                "value": 94
               }
             ]
-          },
-          "unit": "s"
+          }
         },
         "overrides": []
       },
@@ -676,21 +1097,19 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 16
+        "y": 24
       },
-      "id": 5,
+      "id": 7,
       "options": {
         "legend": {
-          "calcs": [
-            "mean"
-          ],
+          "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
         },
         "tooltip": {
           "maxHeight": 600,
-          "mode": "multi",
+          "mode": "single",
           "sort": "none"
         }
       },
@@ -701,28 +1120,149 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum (rate(proxy_time_full_sum{}[$__rate_interval])) without (method,name)\n/\nsum (rate(proxy_time_full_count{}[$__rate_interval])) without (method,name)",
-          "hide": false,
+          "expr": "100*((sum(rate(kernel_bucket{le=\"1.0\"}[1m])) by (job)\n + sum(rate(kernel_bucket{le=\"5.0\"}[1m])) by (job) ) / 2)\n/ sum(rate(kernel_count[1m])) by (job)",
           "instant": false,
-          "legendFormat": "Total",
+          "legendFormat": "__auto",
           "range": true,
-          "refId": "Total"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "editorMode": "code",
-          "expr": "sum (rate(proxy_time_forward_sum{}[$__rate_interval])) without (method,name)\n/\nsum (rate(proxy_time_forward_count{}[$__rate_interval])) without (method,name)\n\n",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "Forward",
-          "range": true,
-          "refId": "Forward"
+          "refId": "APDEX"
         }
       ],
-      "title": "Proxy total time vs Forward time",
+      "title": "APDEX",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "P44368ADAD746BC27"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 50,
+            "gradientMode": "scheme",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "dashed"
+            }
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#727272",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 50
+              },
+              {
+                "color": "yellow",
+                "value": 70
+              },
+              {
+                "color": "green",
+                "value": 85
+              },
+              {
+                "color": "blue",
+                "value": 94
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 24
+      },
+      "id": 8,
+      "interval": "15s",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "maxHeight": 600,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "P44368ADAD746BC27"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  $__timeGroupAlias(finished_at, $__interval),\n  AVG(coalesce(tpdex, 0)) \nFROM\n  transactions\nWHERE\n  $__timeFilter(finished_at) \nGROUP BY\n  time\nORDER BY\n  time",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "name": "AVG",
+                "parameters": [
+                  {
+                    "name": "tpdex",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "name": "started_at",
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "table": "transactions"
+        }
+      ],
+      "title": "TPDEX",
       "type": "timeseries"
     },
     {
@@ -780,47 +1320,27 @@
                 "value": 80
               }
             ]
-          },
-          "unit": "s"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byFrameRefID",
-              "options": "Rate"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "percentunit"
-              },
-              {
-                "id": "custom.drawStyle",
-                "value": "bars"
-              }
-            ]
           }
-        ]
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 12,
-        "y": 16
+        "x": 0,
+        "y": 32
       },
-      "id": 6,
+      "id": 9,
       "options": {
         "legend": {
-          "calcs": [
-            "mean"
-          ],
+          "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
         },
         "tooltip": {
           "maxHeight": 600,
-          "mode": "multi",
+          "mode": "single",
           "sort": "none"
         }
       },
@@ -831,28 +1351,14 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "((sum (rate(proxy_time_full_sum{}[$__rate_interval])) without (method,name)\n/\nsum (rate(proxy_time_full_count{}[$__rate_interval])) without (method,name))\n-\n(sum (rate(proxy_time_forward_sum{}[$__rate_interval])) without (method,name)\n/\nsum (rate(proxy_time_forward_count{}[$__rate_interval])) without (method,name)))",
-          "hide": false,
+          "expr": "sum(async_worker_queue_backlog)",
           "instant": false,
-          "legendFormat": "Overhead",
+          "legendFormat": "__auto",
           "range": true,
-          "refId": "Overhead"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "editorMode": "code",
-          "expr": "\n((sum (rate(proxy_time_full_sum{}[$__rate_interval])) without (method,name)\n/\nsum (rate(proxy_time_full_count{}[$__rate_interval])) without (method,name))\n-\n(sum (rate(proxy_time_forward_sum{}[$__rate_interval])) without (method,name)\n/\nsum (rate(proxy_time_forward_count{}[$__rate_interval])) without (method,name)))\n\n/\n\n(sum (rate(proxy_time_full_sum{}[$__rate_interval])) without (method,name)\n/\nsum (rate(proxy_time_full_count{}[$__rate_interval])) without (method,name))\n",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "Rate",
-          "range": true,
-          "refId": "Rate"
+          "refId": "A"
         }
       ],
-      "title": "Proxy overhead",
+      "title": "Async Worker Queue Backlog",
       "type": "timeseries"
     }
   ],
@@ -863,7 +1369,7 @@
     "list": []
   },
   "time": {
-    "from": "now-30m",
+    "from": "now-15m",
     "to": "now"
   },
   "timeRangeUpdatedDuringEditOrView": false,
@@ -871,6 +1377,6 @@
   "timezone": "browser",
   "title": "Harp Metro",
   "uid": "adoxe6a6p6ku8a",
-  "version": 1,
+  "version": 3,
   "weekStart": ""
 }

@@ -16,4 +16,15 @@ storage:
   migrate: true
 
 http_client:
-  timeout: 10.0
+  timeout: 5.0
+  cache:
+    controller:
+      allow_stale: true
+      allow_heuristics: false
+
+rules:
+  "httpbin-1":
+    "GET /get*":
+      on_remote_response:
+        - logger.warning(f'Filtering remote response for {response}')
+        - response.headers['cache-control'] = 'max-age=10'

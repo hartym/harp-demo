@@ -5,15 +5,17 @@ import random
 AVERAGE_WAIT_TIME = 5.0
 
 PORTS = ('7090', '7092',)
+HOSTS = ('http://api1-proxy', 'http://api2-proxy', )
 
 class BinUser(HttpUser):
     wait_time = between(AVERAGE_WAIT_TIME*0.5, AVERAGE_WAIT_TIME*1.5)
 
     def _get_host(self):
-        host = self.host
-        if host.endswith(":7090"):
-            host = host[:-5] + ":" + random.choice(PORTS)
-        return host
+        return random.choice(HOSTS)
+        #host = self.host
+        #if host.endswith(":7090"):
+        #    host = host[:-5] + ":" + random.choice(PORTS)
+        #return host
 
     def get(self, path, *args, **kwargs):
         return self.client.get(self._get_host()+ path, *args, **kwargs)

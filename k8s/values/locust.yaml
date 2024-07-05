@@ -1,0 +1,42 @@
+image:
+  tag: 2.29.1
+
+loadtest:
+  name: demo
+  locust_locustfile_configmap: "locustfile"
+  locust_lib_configmap: "locustlib"
+  locust_host: harp.demo
+
+master:
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1024Mi
+    requests:
+      cpu: 500m
+      memory: 512Mi
+
+worker:
+  hpa:
+    enabled: true
+    maxReplicas: 20
+
+  resources:
+    limits:
+      cpu: 500m
+      memory: 256Mi
+    requests:
+      cpu: 250m
+      memory: 256Mi
+
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: locust.harp.demo
+      pathType: ImplementationSpecific
+      path: /
+  tls:
+    - hosts:
+        - locust.harp.demo
+      secretName: demo-tls
