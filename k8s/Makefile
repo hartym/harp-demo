@@ -5,7 +5,7 @@ KUBE_CONTEXT ?= docker-desktop
 KUBE_NAMESPACE ?= demo
 
 IMAGE ?= makersquad/harp-proxy
-TAG ?= 0.5.1
+TAG ?= 0.6.0a3
 PULL_POLICY ?= IfNotPresent
 
 up: config namespace certs
