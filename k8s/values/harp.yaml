@@ -1,5 +1,9 @@
 fullnameOverride: harp
 
+harp:
+  container:
+    arguments: [ --enable, rules ]
+
 postgresql:
   auth:
     database: harp
@@ -21,6 +25,12 @@ settings:
   storage:
     type: sqlalchemy
     url: postgresql+asyncpg://harp:password@harp-postgresql/harp
+
+  rules:
+    'api1':
+      'GET /get':
+        '':
+          pass
 
 ingress:
   enabled: true
