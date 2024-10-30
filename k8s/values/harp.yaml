@@ -3,6 +3,8 @@ fullnameOverride: harp
 harp:
   container:
     arguments: [ --enable, rules ]
+    env:
+      LOGGING_SQL: info
 
 postgresql:
   auth:
@@ -10,20 +12,50 @@ postgresql:
     password: password
     username: harp
   enabled: true
+  primary:
+    service:
+      type: NodePort
+      nodePorts:
+        postgresql: 30001
 
 endpoints:
   - name: api1
     port: 8080
     serviceName: api1-proxy
-    url: http://api1-internal/
+    remote:
+      min_pool_size: 2
+      endpoints:
+        - { url: "http://api1-internal/" }
+        - { url: "http://api2-internal/" }
+        - { url: "http://api3-internal/", pools: [fallback] }
+        - { url: "http://api4-internal/", pools: [fallback] }
+      probe:
+        method: GET
+        path: "/get"
+        interval: 5
+        #verify: False
+      break_on: [network_error]
+
   - name: api2
     port: 8081
     serviceName: api2-proxy
-    url: http://api2-internal/
+    remote:
+      min_pool_size: 2
+      endpoints:
+        - { url: "http://api3-internal/" }
+        - { url: "http://api4-internal/" }
+        - { url: "http://api1-internal/", pools: [fallback] }
+        - { url: "http://api2-internal/", pools: [fallback] }
+      probe:
+        method: GET
+        path: "/get"
+        interval: 5
+        #verify: False
+      break_on: [network_error]
+
 
 settings:
   storage:
-    type: sqlalchemy
     url: postgresql+asyncpg://harp:password@harp-postgresql/harp
 
   rules:

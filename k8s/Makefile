@@ -1,14 +1,15 @@
-.PHONY: up down config static reload namespace certs
+.PHONY: up down config static reload namespace certs template nginx-ingree-controller
 
 KUBE_CONTEXT ?= docker-desktop
 KUBE_NAMESPACE ?= demo
 KUBECTL ?= $(shell which kubectl || echo kubectl) --context=$(KUBE_CONTEXT)
 
+CHART ?= oci://europe-west1-docker.pkg.dev/makersquad/harp/harp-proxy
 IMAGE ?= makersquad/harp-proxy
-TAG ?= 0.6-git
+TAG ?= 0.7.4
 PULL_POLICY ?= IfNotPresent
 
-up: config namespace certs
+up: config namespace certs nginx-ingress-controller
 	$(MAKE) static
 
 	for f in manifests/*.yaml; do \
@@ -16,7 +17,7 @@ up: config namespace certs
 	done
 
 	helm upgrade --install --kube-context $(KUBE_CONTEXT) --namespace $(KUBE_NAMESPACE) harp \
-	    ../../harp/misc/helm/charts/harp-proxy/ \
+	    $(CHART) \
 	    -f values/harp.yaml \
 	    --set image.repository=$(IMAGE),image.tag=$(TAG),image.pullPolicy=$(PULL_POLICY)
 
@@ -33,6 +34,17 @@ up: config namespace certs
 	    -f values/locust.yaml
 
 	$(MAKE) reload
+
+nginx-ingress-controller:
+	helm upgrade --install ingress-nginx ingress-nginx \
+	  --repo https://kubernetes.github.io/ingress-nginx \
+	  --namespace ingress-nginx --create-namespace
+
+template:
+	helm template --kube-context $(KUBE_CONTEXT) --namespace $(KUBE_NAMESPACE) harp \
+	    $(CHART) \
+	    -f values/harp.yaml \
+	    --set image.repository=$(IMAGE),image.tag=$(TAG),image.pullPolicy=$(PULL_POLICY) --debug
 
 down:
 	$(KUBECTL) delete namespace demo
@@ -61,3 +73,6 @@ namespace:
 certs:
 	-(cd certs; $(MAKE) kubernetes-create-secret)
 
+
+static/index/arch.svg: schema.dot
+	dot -Tsvg schema.dot > $@

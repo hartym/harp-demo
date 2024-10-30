@@ -1,25 +1,61 @@
 <!DOCTYPE html>
 <html>
-<body>
-<h1>HARP Demo</h1>
-<p>Welcome to the HARP demo index page.</p>
-<ul>
-    <li><a href="https://dashboard.harp.demo/" target="_blank">HARP Dashboard</a></li>
-    <li>
+  <body>
+    <h1>HARP Demo</h1>
+    <p>Welcome to the HARP demo index page.</p>
+
+    <ul>
+      <li>
+        <a href="https://dashboard.harp.demo/" target="_blank"
+          >HARP Dashboard</a
+        >
+      </li>
+      <li>
+        <a href="https://api1.harp.demo/" target="_blank">API 1 (proxy)</a>
+        <i
+          >(default:
+          <a href="https://api1-internal.harp.demo/" target="_blank">httpbin1</a
+          >,
+          <a href="https://api2-internal.harp.demo/" target="_blank">httpbin2</a
+          >, fallbacks:
+          <a href="https://api3-internal.harp.demo/" target="_blank">httpbin3</a
+          >,
+          <a href="https://api4-internal.harp.demo/" target="_blank">httpbin4</a
+          >)</i
+        >
+      </li>
+      <li>
+        <a href="https://api2.harp.demo/" target="_blank">API 2 (proxy)</a>
+        <i
+          >(default:
+          <a href="https://api3-internal.harp.demo/" target="_blank">httpbin3</a
+          >,
+          <a href="https://api4-internal.harp.demo/" target="_blank">httpbin4</a
+          >, fallbacks:
+          <a href="https://api1-internal.harp.demo/" target="_blank">httpbin1</a
+          >,
+          <a href="https://api2-internal.harp.demo/" target="_blank">httpbin2</a
+          >)</i
+        >
+      </li>
+      <li><a href="https://pgadmin.harp.demo/" target="_blank">PGAdmin</a></li>
+    </ul>
+
+    <object data="arch.svg" type="image/svg+xml"></object>
+
+    <ul>
+      <li><a href="https://locust.harp.demo/" target="_blank">Locust</a></li>
+      <li>
         <a href="https://grafana.harp.demo/" target="_blank">Grafana</a>
-        (<a href="https://grafana.harp.demo/d/adoxe6a6p6ku8a/harp-metro" target="_blank">metro</a>)
-    </li>
-    <li><a href="https://prometheus.harp.demo/" target="_blank">Prometheus</a></li>
-    <li>
-        <a href="https://api1.harp.demo/" target="_blank">API 1 (proxied)</a>
-        (<a href="https://api1-internal.harp.demo/" target="_blank">without proxy</a>)
-    </li>
-    <li>
-        <a href="https://api2.harp.demo/" target="_blank">API 2 (proxied)</a>
-        (<a href="https://api2-internal.harp.demo/" target="_blank">without proxy</a>)
-    </li>
-    <li><a href="https://locust.harp.demo/" target="_blank">Locust</a></li>
-    <li><a href="https://pgadmin.harp.demo/" target="_blank">PGAdmin</a></li>
-</ul>
-</body>
+        (<a
+          href="https://grafana.harp.demo/d/adoxe6a6p6ku8a/harp-metro"
+          target="_blank"
+          >metro</a
+        >)
+      </li>
+      <li>
+        <a href="https://prometheus.harp.demo/" target="_blank">Prometheus</a>
+      </li>
+    </ul>
+  </body>
 </html>

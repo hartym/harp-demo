@@ -1,0 +1,44 @@
+strict digraph {
+     rankdir="LR";
+    node [shape="box"];
+    
+    PostgreSQL [shape="cylinder" style=filled fillcolor="#ADD8E6" color="#085E9F" fontcolor="#085E9F"]
+
+    Dashboard [style=filled fillcolor="#085E9F" color=white fontcolor=white]
+    HARP [style=filled fillcolor="#085E9F" color=white fontcolor=white]
+    "api1 (proxy)" [style=filled fillcolor="#085E9F" color=white fontcolor=white]
+    "api2 (proxy)" [style=filled fillcolor="#085E9F" color=white fontcolor=white]
+    
+    Prometheus [shape="cylinder" color="#6B7280" fontcolor="#6B7280"]
+    Grafana [color="#6B7280" fontcolor="#6B7280"]
+    Locust [color="#6B7280" fontcolor="#6B7280"]
+    
+    "httpbin1" [ shape="ellipse"]
+    "httpbin2" [ shape="ellipse"]
+    "httpbin3" [ shape="ellipse"]
+    "httpbin4" [ shape="ellipse"]
+    
+
+    HARP -> "api1 (proxy)"
+    "api1 (proxy)" -> "httpbin1"
+    "api1 (proxy)" -> "httpbin2"
+    "api1 (proxy)" -> "httpbin3"
+    "api1 (proxy)" -> "httpbin4"
+    
+    HARP -> "api2 (proxy)"
+     "api2 (proxy)" -> "httpbin3"
+     "api2 (proxy)" -> "httpbin4"
+     "api2 (proxy)" -> "httpbin1"
+     "api2 (proxy)" -> "httpbin2"
+     
+     "Dashboard" -> "HARP"
+     
+     "HARP" -> PostgreSQL
+     
+         "Locust" -> "api1 (proxy)"     
+         "Locust" -> "api2 (proxy)"
+    Prometheus -> HARP
+    Grafana -> PostgreSQL
+    Grafana -> Prometheus
+
+}
