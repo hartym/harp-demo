@@ -2,7 +2,7 @@ fullnameOverride: harp
 
 harp:
   container:
-    arguments: [ --enable, rules ]
+    arguments: [ --enable, rules, --enable, metrics ]
     env:
       LOGGING_SQL: info
 

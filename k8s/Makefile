@@ -6,7 +6,7 @@ KUBECTL ?= $(shell which kubectl || echo kubectl) --context=$(KUBE_CONTEXT)
 
 CHART ?= oci://europe-west1-docker.pkg.dev/makersquad/harp/harp-proxy
 IMAGE ?= makersquad/harp-proxy
-TAG ?= 0.7.4
+TAG ?= 0.8.0a2
 PULL_POLICY ?= IfNotPresent
 
 up: config namespace certs nginx-ingress-controller

@@ -18,6 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
+  "id": 1,
   "links": [],
   "panels": [
     {
@@ -37,6 +38,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -132,6 +134,7 @@
           "sort": "none"
         }
       },
+      "pluginVersion": "",
       "targets": [
         {
           "datasource": {
@@ -180,6 +183,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "bars",
             "fillOpacity": 20,
             "gradientMode": "none",
@@ -339,6 +343,7 @@
           "sort": "none"
         }
       },
+      "pluginVersion": "",
       "targets": [
         {
           "datasource": {
@@ -387,8 +392,9 @@
             "axisPlacement": "auto",
             "axisSoftMin": 0,
             "barAlignment": 0,
-            "drawStyle": "bars",
-            "fillOpacity": 100,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -397,12 +403,12 @@
             },
             "insertNulls": false,
             "lineInterpolation": "linear",
-            "lineWidth": 0,
+            "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "never",
+            "showPoints": "always",
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -432,7 +438,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "ASGI Kernel"
+              "options": "ASGI"
             },
             "properties": [
               {
@@ -447,7 +453,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "Proxy Controller"
+              "options": "Controller"
             },
             "properties": [
               {
@@ -462,7 +468,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "Forward"
+              "options": "Remote"
             },
             "properties": [
               {
@@ -498,6 +504,7 @@
           "sort": "none"
         }
       },
+      "pluginVersion": "",
       "targets": [
         {
           "datasource": {
@@ -505,12 +512,12 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(rate(kernel_sum[$__rate_interval])) / sum(rate(kernel_count[$__rate_interval]))\n",
+          "expr": "sum(rate(requests_time_sum[$__rate_interval]))/sum(rate(requests_time_count[$__rate_interval]))",
           "hide": false,
           "instant": false,
-          "legendFormat": "ASGI Kernel",
+          "legendFormat": "ASGI",
           "range": true,
-          "refId": "KERNEL"
+          "refId": "ASGI"
         },
         {
           "datasource": {
@@ -518,12 +525,12 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(rate(proxy_sum[$__rate_interval])) / sum(rate(proxy_count[$__rate_interval]))\n",
+          "expr": "sum(rate(controller_requests_time_sum[$__rate_interval]))/sum(rate(controller_requests_time_count[$__rate_interval]))",
           "hide": false,
           "instant": false,
-          "legendFormat": "Proxy Controller",
+          "legendFormat": "Controller",
           "range": true,
-          "refId": "PROXY"
+          "refId": "CONTROLLER"
         },
         {
           "datasource": {
@@ -531,15 +538,15 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(rate(http_sum[$__rate_interval])) / sum(rate(http_count[$__rate_interval]))\n",
+          "expr": "sum(rate(remote_requests_time_sum[$__rate_interval]))/sum(rate(remote_requests_time_count[$__rate_interval]))",
           "hide": false,
           "instant": false,
-          "legendFormat": "Forward",
+          "legendFormat": "Remote",
           "range": true,
-          "refId": "HTTP"
+          "refId": "REMOTE"
         }
       ],
-      "title": "Kernel > Proxy > Http – Transaction Time",
+      "title": "ASGI & Controller request time",
       "type": "timeseries"
     },
     {
@@ -559,8 +566,9 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
-            "fillOpacity": 20,
+            "fillOpacity": 0,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -633,7 +641,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "Kernel+Proxy Cost (s)"
+              "options": "ASGI Cost / Total request (s)"
             },
             "properties": [
               {
@@ -655,6 +663,66 @@
                 "id": "color",
                 "value": {
                   "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "ASGI Cost / Effective request (s)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Controller Cost / Remote call (s)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Controller Cost / call (s)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "HARP Cost / Remote request (s)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
                   "mode": "fixed"
                 }
               }
@@ -684,6 +752,7 @@
           "sort": "none"
         }
       },
+      "pluginVersion": "",
       "targets": [
         {
           "datasource": {
@@ -691,12 +760,12 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(rate(proxy_sum[$__rate_interval])) / sum(rate(proxy_count[$__rate_interval]))\n- sum(rate(http_sum[$__rate_interval])) / sum(rate(http_count[$__rate_interval]))\n",
+          "expr": "(sum(rate(requests_time_sum[$__rate_interval])) - sum(rate(controller_requests_time_sum[$__rate_interval])))\n/sum(rate(controller_requests_time_count[$__rate_interval]))",
           "hide": false,
           "instant": false,
-          "legendFormat": "Proxy Cost (s)",
+          "legendFormat": "ASGI Cost / Effective request (s)",
           "range": true,
-          "refId": "Cost (proxy time)"
+          "refId": "ASGI Kernel Overhead per effective request (non utility)"
         },
         {
           "datasource": {
@@ -704,12 +773,51 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(rate(kernel_sum[$__rate_interval])) / sum(rate(kernel_count[$__rate_interval]))\n- sum(rate(http_sum[$__rate_interval])) / sum(rate(http_count[$__rate_interval]))\n",
+          "expr": "(sum(rate(requests_time_sum[$__rate_interval])) - sum(rate(controller_requests_time_sum[$__rate_interval])))\n/sum(rate(requests_time_count[$__rate_interval]))",
           "hide": false,
           "instant": false,
-          "legendFormat": "Kernel+Proxy Cost (s)",
+          "legendFormat": "ASGI Cost / Total request (s)",
           "range": true,
-          "refId": "Cost (kernel time)"
+          "refId": "ASGI Kernel Overhead per total request (including utility)"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "(sum(rate(controller_requests_time_sum[$__rate_interval])) - sum(rate(remote_requests_time_sum[$__rate_interval])))\n/sum(rate(remote_requests_time_count[$__rate_interval]))",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "Controller Cost / Remote call (s)",
+          "range": true,
+          "refId": "Controller Overhead / Remote call"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "(sum(rate(controller_requests_time_sum[$__rate_interval])) - sum(rate(remote_requests_time_sum[$__rate_interval])))\n/sum(rate(controller_requests_time_count[$__rate_interval]))",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "Controller Cost / call (s)",
+          "range": true,
+          "refId": "Controller Overhead / Controller call"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "(sum(rate(requests_time_sum[$__rate_interval])) - sum(rate(remote_requests_time_sum[$__rate_interval])))\n/sum(rate(remote_requests_time_count[$__rate_interval]))",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "HARP Cost / Remote request (s)",
+          "range": true,
+          "refId": "Average overhead per remote call"
         },
         {
           "datasource": {
@@ -725,7 +833,7 @@
           "refId": "Cost (%)"
         }
       ],
-      "title": "Kernel & Proxy – Cost",
+      "title": "ASGI & Controller Overhead",
       "type": "timeseries"
     },
     {
@@ -745,6 +853,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "bars",
             "fillOpacity": 20,
             "gradientMode": "none",
@@ -807,6 +916,7 @@
           "sort": "none"
         }
       },
+      "pluginVersion": "",
       "targets": [
         {
           "datasource": {
@@ -880,6 +990,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "bars",
             "fillOpacity": 20,
             "gradientMode": "none",
@@ -942,6 +1053,7 @@
           "sort": "none"
         }
       },
+      "pluginVersion": "",
       "targets": [
         {
           "datasource": {
@@ -1037,6 +1149,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 50,
             "gradientMode": "scheme",
@@ -1113,6 +1226,7 @@
           "sort": "none"
         }
       },
+      "pluginVersion": "",
       "targets": [
         {
           "datasource": {
@@ -1120,7 +1234,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "100*((sum(rate(kernel_bucket{le=\"1.0\"}[1m])) by (job)\n + sum(rate(kernel_bucket{le=\"5.0\"}[1m])) by (job) ) / 2)\n/ sum(rate(kernel_count[1m])) by (job)",
+          "expr": "100*((sum(rate(requests_time_bucket{le=\"1.0\"}[1m])) by (job)\n + sum(rate(requests_time_bucket{le=\"5.0\"}[1m])) by (job) ) / 2)\n/ sum(rate(requests_time_count[1m])) by (job)",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -1147,6 +1261,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 50,
             "gradientMode": "scheme",
@@ -1224,6 +1339,7 @@
           "sort": "none"
         }
       },
+      "pluginVersion": "",
       "targets": [
         {
           "datasource": {
@@ -1282,6 +1398,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -1344,6 +1461,7 @@
           "sort": "none"
         }
       },
+      "pluginVersion": "",
       "targets": [
         {
           "datasource": {
@@ -1362,8 +1480,9 @@
       "type": "timeseries"
     }
   ],
+  "preload": false,
   "refresh": "5s",
-  "schemaVersion": 39,
+  "schemaVersion": 40,
   "tags": [],
   "templating": {
     "list": []
@@ -1372,11 +1491,10 @@
     "from": "now-15m",
     "to": "now"
   },
-  "timeRangeUpdatedDuringEditOrView": false,
   "timepicker": {},
   "timezone": "browser",
   "title": "Harp Metro",
   "uid": "adoxe6a6p6ku8a",
-  "version": 3,
+  "version": 2,
   "weekStart": ""
 }
